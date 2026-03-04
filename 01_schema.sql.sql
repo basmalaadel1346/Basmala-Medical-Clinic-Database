@@ -36,6 +36,7 @@ PatientID INT NOT NULL,
 AppointmentDate DATETIME NOT NULL,
 Reason NVARCHAR(255),
 AppointmentStatus NVARCHAR(50) DEFAULT 'Pending',
+CONSTRAINT CHK_AppointmentStatus CHECK (AppointmentStatus IN ('Pending', 'Confirmed', 'Completed', 'Cancelled', 'No Show')),
 CONSTRAINT FK_Appointments_Doctors FOREIGN KEY (DoctorID) REFERENCES dbo.Doctors(DoctorID),
 CONSTRAINT FK_Appointments_Patients FOREIGN KEY (PatientID) REFERENCES dbo.Patients(PatientID)
 );
