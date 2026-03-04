@@ -86,38 +86,6 @@ END CATCH;
 
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Appointments_DoctorID' AND object_id = OBJECT_ID('dbo.Appointments'))
-BEGIN
-CREATE NONCLUSTERED INDEX IX_Appointments_DoctorID ON dbo.Appointments (DoctorID);
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Appointments_PatientID' AND object_id = OBJECT_ID('dbo.Appointments'))
-BEGIN
-CREATE NONCLUSTERED INDEX IX_Appointments_PatientID ON dbo.Appointments (PatientID);
-END
-GO
-
-IF NOT EXISTS (SELECT * FROM sys.indexes WHERE name = 'IX_Payments_AppointmentID' AND object_id = OBJECT_ID('dbo.Payments'))
-BEGIN
-CREATE NONCLUSTERED INDEX IX_Payments_AppointmentID ON dbo.Payments (AppointmentID);
-END
-GO
-
-CREATE OR ALTER VIEW vw_AppointmentsDetails AS
-SELECT
-A.AppointmentID,
-CONCAT(PatP.FirstName, ' ', PatP.LastName) AS PatientName,
-CONCAT(DocP.FirstName, ' ', DocP.LastName) AS DoctorName,
-A.AppointmentDate,
-A.AppointmentStatus
-FROM dbo.Appointments A
-JOIN dbo.Patients Pat ON A.PatientID = Pat.PatientID
-JOIN dbo.Persons PatP ON Pat.PersonID = PatP.PersonID
-JOIN dbo.Doctors Doc ON A.DoctorID = Doc.DoctorID
-JOIN dbo.Persons DocP ON Doc.PersonID = DocP.PersonID;
-GO
-
 SELECT * FROM vw_AppointmentsDetails;
 
 SELECT Doc.DoctorID, CONCAT(P.FirstName,' ',P.LastName) AS DoctorName, COUNT(A.AppointmentID) AS TotalAppointments
